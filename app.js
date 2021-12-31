@@ -7,8 +7,8 @@ const express = require('express'),
 	ejsMate = require('ejs-mate'),
 	catchAsync = require('./utils/catchAsync'),
 	ExpressError = require('./utils/ExpressError'),
-	campgrounds = require('./routes/campground');
-reviews = require('./routes/reviews');
+	campgrounds = require('./routes/campground'),
+	reviews = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 	useNewUrlParser    : true,
