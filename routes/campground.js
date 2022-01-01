@@ -15,7 +15,7 @@ const validateCampground = (req, res, next) => {
 		next();
 	}
 };
-
+//Campground Home
 router.get(
 	'/',
 	catchAsync(async (req, res) => {
@@ -23,11 +23,11 @@ router.get(
 		res.render('campgrounds/index', { campgrounds });
 	})
 );
-
+// Show new Campground Page
 router.get('/new', (req, res) => {
 	res.render('campgrounds/new');
 });
-
+//Create New Campground
 router.post(
 	'/',
 	validateCampground,
@@ -38,7 +38,7 @@ router.post(
 		res.redirect(`/campgrounds/${campground._id}`);
 	})
 );
-
+//show Campground
 router.get(
 	'/:id',
 	catchAsync(async (req, res) => {
@@ -48,6 +48,7 @@ router.get(
 		res.render('campgrounds/show', { campground });
 	})
 );
+//show campground edit
 router.get(
 	'/:id/edit',
 	catchAsync(async (req, res) => {
@@ -56,6 +57,7 @@ router.get(
 		res.render('campgrounds/edit', { campground });
 	})
 );
+//update campground
 router.put(
 	'/:id',
 	validateCampground,
@@ -65,6 +67,7 @@ router.put(
 		res.redirect(`/campgrounds/${campground._id}`);
 	})
 );
+//Delete One Campground
 router.delete(
 	'/:id',
 	catchAsync(async (req, res) => {
