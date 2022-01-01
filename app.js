@@ -1,13 +1,15 @@
-const express = require('express'),
-	path = require('path'),
-	app = express(),
-	mongoose = require('mongoose'),
-	methodOverride = require('method-override'),
-	morgan = require('morgan'),
-	ejsMate = require('ejs-mate'),
-	ExpressError = require('./utils/ExpressError'),
-	campgrounds = require('./routes/campground'),
-	reviews = require('./routes/reviews');
+const express = require('express');
+const path = require('path');
+const app = express();
+const mongoose = require('mongoose');
+const methodOverride = require('method-override');
+const morgan = require('morgan');
+const ejsMate = require('ejs-mate');
+const ExpressError = require('./utils/ExpressError');
+const campgrounds = require('./routes/campground');
+const reviews = require('./routes/reviews');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 	useNewUrlParser    : true,
@@ -23,10 +25,28 @@ app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static('public'));
-// app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+const sessionConfig = {
+	secret            : 'thisshouldbeabettersecret!',
+	resave            : false,
+	saveUninitialized : true,
+	cookie            : {
+		httpOnly : true,
+		expires  : Date.now() + 1000 * 60 * 60 * 24 * 7,
+		maxAge   : 1000 * 60 * 60 * 24 * 7
+	}
+};
+app.use(session(sessionConfig));
+app.use(flash());
+
+app.use((req, res, next) => {
+	res.locals.success = req.flash('success');
+	res.locals.error = req.flash('error');
+	next();
+});
 
 app.use('/campgrounds', campgrounds);
 app.use('/campgrounds/:id/reviews', reviews);
