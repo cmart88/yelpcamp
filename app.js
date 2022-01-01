@@ -5,7 +5,6 @@ const express = require('express'),
 	methodOverride = require('method-override'),
 	morgan = require('morgan'),
 	ejsMate = require('ejs-mate'),
-	catchAsync = require('./utils/catchAsync'),
 	ExpressError = require('./utils/ExpressError'),
 	campgrounds = require('./routes/campground'),
 	reviews = require('./routes/reviews');
@@ -26,6 +25,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static('public'));
 // app.use(morgan('dev'));
 
 app.use('/campgrounds', campgrounds);
