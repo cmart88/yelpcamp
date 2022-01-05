@@ -6,8 +6,9 @@ const methodOverride = require('method-override');
 const morgan = require('morgan');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError');
-const campgrounds = require('./routes/campground');
-const reviews = require('./routes/reviews');
+const campgroundRoutes = require('./routes/campground');
+const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -64,8 +65,9 @@ app.get('/fakeUser', async (req, res) => {
 	res.send(newUser);
 });
 
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
 	res.render('home');
