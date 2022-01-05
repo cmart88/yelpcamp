@@ -10,6 +10,7 @@ const campgrounds = require('./routes/campground');
 const reviews = require('./routes/reviews');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport-local');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 	useNewUrlParser    : true,
