@@ -32,6 +32,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.post(
 	'/',
 	validateCampground,
+	isLoggedIn,
 	catchAsync(async (req, res, next) => {
 		const campground = new Campground(req.body.campground);
 		await campground.save();
@@ -55,6 +56,7 @@ router.get(
 //show campground edit
 router.get(
 	'/:id/edit',
+	isLoggedIn,
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
 		const campground = await Campground.findById(id);
@@ -68,6 +70,7 @@ router.get(
 //update campground
 router.put(
 	'/:id',
+	isLoggedIn,
 	validateCampground,
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
@@ -79,6 +82,7 @@ router.put(
 //Delete One Campground
 router.delete(
 	'/:id',
+	isLoggedIn,
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
 		const deletedproduct = await Campground.findByIdAndDelete(id);
