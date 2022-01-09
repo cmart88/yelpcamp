@@ -14,7 +14,7 @@ db.once('open', () => {
 	console.log('Database connected');
 });
 
-async function seedImg () {
+async function seedImg() {
 	try {
 		const resp = await axios.get('https://api.unsplash.com/photos/random', {
 			params : {
@@ -36,6 +36,7 @@ const seedDB = async () => {
 		const random1000 = Math.floor(Math.random() * 1000);
 		const price = Math.floor(Math.random() * 20) + 10;
 		const camp = new Campground({
+			author      : '61d62c4956cf6abd96e02792',
 			image       : await seedImg(),
 			location    : `${cities[random1000].city}, ${cities[random1000].state}`,
 			title       : `${sample(descriptors)} ${sample(places)}`,
