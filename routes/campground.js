@@ -4,11 +4,18 @@ const campgrounds = require("../controllers/campgrounds");
 const catchAsync = require("../utils/catchAsync");
 const Campground = require("../models/campground");
 const { isLoggedIn, isAuthor, validateCampground } = require("../middleware");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 router
   .route("/")
   .get(catchAsync(campgrounds.index)) //Campground Home
-  .post(validateCampground, isLoggedIn, catchAsync(campgrounds.createNew)); //Create New Campground
+  .post(
+    isLoggedIn,
+    upload.array("image"),
+    validateCampground,
+    catchAsync(campgrounds.createNew)
+  );
 
 router.get("/new", isLoggedIn, campgrounds.renderNewForm); // Show new Campground Page
 
@@ -29,4 +36,5 @@ router.get(
   isAuthor,
   catchAsync(campgrounds.campgroundEdit)
 ); //show campground edit
+
 module.exports = router;
