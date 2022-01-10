@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+console.log(process.env.API_KEY);
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -59,15 +63,6 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
-});
-
-app.get("/fakeUser", async (req, res) => {
-  const user = new User({
-    email: "ftballplaya1221@gmail.com",
-    username: "Ftballplaya1221",
-  });
-  const newUser = await User.register(user, "Ftball753");
-  res.send(newUser);
 });
 
 app.use("/", userRoutes);
