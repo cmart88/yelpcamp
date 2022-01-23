@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
-console.log(process.env.API_KEY);
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -19,8 +18,12 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user");
 const mongoSanitize = require("express-mongo-sanitize");
-
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+const MongoStore = require("connect-mongo");
+// const dbUrl = process.env.DB_URL;
+const dbUrl = "mongodb://localhost:27017/yelp-camp";
+// const helmet = require("helmet");
+// "mongodb://localhost:27017/yelp-camp"
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -39,13 +42,74 @@ app.use(mongoSanitize());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
-
+// app.use(helmet());
+// const scriptSrcUrls = [
+//     "https://stackpath.bootstrapcdn.com/",
+//     "https://api.tiles.mapbox.com/",
+//     "https://api.mapbox.com/",
+//     "https://kit.fontawesome.com/",
+//     "https://cdnjs.cloudflare.com/",
+//     "https://cdn.jsdelivr.net",
+//     "https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js",
+//     "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js",
+// ];
+// const styleSrcUrls = [
+//     "https://kit-free.fontawesome.com/",
+//     "https://stackpath.bootstrapcdn.com/",
+//     "https://api.mapbox.com/",
+//     "https://api.tiles.mapbox.com/",
+//     "https://fonts.googleapis.com/",
+//     "https://use.fontawesome.com/",
+//     "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
+//     "https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css",
+//     "mapbox://styles/mapbox/light-v10",
+// ];
+// const connectSrcUrls = [
+//     "https://api.mapbox.com/",
+//     "https://a.tiles.mapbox.com/",
+//     "https://b.tiles.mapbox.com/",
+//     "https://events.mapbox.com/",
+// ];
+// const fontSrcUrls = [];
+// app.use(
+//     helmet.contentSecurityPolicy({
+//         directives: {
+//             defaultSrc: [],
+//             connectSrc: ["'self'", ...connectSrcUrls],
+//             scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+//             styleSrc: ["'self''", "'unsafe-inline'", ...styleSrcUrls],
+//             workerSrc: ["'self'", "blob:"],
+//             objectSrc: [],
+//             imgSrc: [
+//                 "'self'",
+//                 "blob:",
+//                 "data:",
+//                 "https://res.cloudinary.com/dtgfvptng/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
+//                 "https://images.unsplash.com/",
+//             ],
+//             fontSrc: ["'self'", ...fontSrcUrls],
+//         },
+//     })
+// );
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: "squirrel",
+    },
+});
+store.on("error", function (e) {
+    console.log("session store error", e);
+});
 const sessionConfig = {
-    secret: "thisshouldbeabettersecret!",
+    name: "Sessionblah",
+    secret: "squirrel!",
+    store,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
