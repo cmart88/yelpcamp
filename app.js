@@ -19,8 +19,7 @@ const localStrategy = require("passport-local");
 const User = require("./models/user");
 const mongoSanitize = require("express-mongo-sanitize");
 const MongoStore = require("connect-mongo");
-// const dbUrl = process.env.DB_URL;
-const dbUrl = "mongodb://localhost:27017/yelp-camp";
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 // const helmet = require("helmet");
 // "mongodb://localhost:27017/yelp-camp"
 mongoose.connect(dbUrl, {
@@ -91,11 +90,12 @@ app.use(express.static(path.join(__dirname, "public")));
 //         },
 //     })
 // );
+const secret = process.env.SECRET || "squirrel";
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: "squirrel",
+        secret,
     },
 });
 store.on("error", function (e) {
@@ -103,7 +103,7 @@ store.on("error", function (e) {
 });
 const sessionConfig = {
     name: "Sessionblah",
-    secret: "squirrel!",
+    secret,
     store,
     resave: false,
     saveUninitialized: true,
