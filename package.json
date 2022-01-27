@@ -2,9 +2,10 @@
   "name": "yelpcamp",
   "version": "1.0.0",
   "description": "",
+  "git repository": "https://github.com/cmart88/yelpcamp",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node app.js"
   },
   "author": "",
@@ -25,6 +26,7 @@
     "joi": "^17.5.0",
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
+    "mocha": "^9.2.0",
     "mongoose": "^6.0.14",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
